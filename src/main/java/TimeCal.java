@@ -12,7 +12,6 @@ public class TimeCal {
         System.out.println("Time to reach the destination: "+ calTime(distance, speed));
 
     }
-
     public static double calTime(double x, double v){
         return x/v;
     }
