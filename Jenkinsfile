@@ -6,7 +6,7 @@ pipeline{
             PATH = "C:\\Windows\\System32;C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
 
             // Define Docker Hub credentials ID
-            DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
+            DOCKERHUB_CREDENTIALS_ID = 'docker-hub-credentials'
             // Define Docker Hub repository name
             DOCKERHUB_REPO = 'vickneee/week6_livedemo2'
             // Define Docker image tag
@@ -73,13 +73,26 @@ pipeline{
              }
         }
 
+        stage('Log in to the Docker') {
+            steps {
+                bat 'docker login -u vickneee -p ****'
+            }
+        }
+
         // Create repo in Docker Hub to push it (Run Dockerfile)
         stage('Push Docker Image to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                /* withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     bat '''
                         docker login -u %DOCKER_USER% -p %DOCKER_PASS%
                         docker push %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG%
+                    ''' */
+                // Using Docker Hub Token
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    bat '''
+                        docker login -u vickneee -p ****
+                        docker push %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG%
+                        echo %PASS% | docker login -u %USER% --password-stdin
                     '''
                 }
             }
