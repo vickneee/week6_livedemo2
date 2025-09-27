@@ -39,9 +39,7 @@ pipeline{
 
         stage('Test') {
             steps {
-                withEnv(["PATH+MAVEN=${tool 'MAVEN_HOME'}/bin"]) {
-                    bat 'mvn clean install'
-                }
+                bat 'mvn clean install'
             }
         }
 
