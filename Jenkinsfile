@@ -25,6 +25,12 @@ pipeline{
             }
         }
 
+        stage('Test CMD') {
+            steps {
+                bat 'echo Hello from CMD'
+            }
+        }
+
         stage ('Build') {
             steps {
                 bat  'mvn clean install'
