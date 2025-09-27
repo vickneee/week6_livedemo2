@@ -3,7 +3,7 @@ pipeline{
     agent any
 
     environment {
-            PATH = "C:\\Windows\\System32; C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
+            PATH = "C:\\Windows\\System32;C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
 
             // Define Docker Hub credentials ID
             DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
@@ -52,12 +52,6 @@ pipeline{
         stage('Publish Test Results') {
             steps {
                 junit '**/target/surefire-reports/*.xml'
-            }
-        }
-
-        stage('Test Docker') {
-            steps {
-                bat 'docker --version'
             }
         }
 
