@@ -27,8 +27,9 @@ pipeline{
 
         stage ('Build') {
             steps {
-            withEnv(["PATH+MAVEN=${tool 'Maven3'}/bin"])
-              bat  'mvn clean install'
+                withEnv(["PATH+MAVEN=${tool 'Maven3'}/bin"]) {
+                    bat  'mvn clean install'
+                }
             }
         }
 
