@@ -55,6 +55,12 @@ pipeline{
             }
         }
 
+        stage('Test Docker') {
+            steps {
+                bat 'docker --version'
+            }
+        }
+
         stage('Publish Coverage Report') {
             steps {
                 jacoco()
