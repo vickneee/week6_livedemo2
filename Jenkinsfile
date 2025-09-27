@@ -73,6 +73,7 @@ pipeline{
              }
         }
 
+        // Create repo in Docker Hub to push it (Run Dockerfile)
         stage('Push Docker Image to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
