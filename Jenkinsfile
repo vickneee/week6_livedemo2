@@ -3,10 +3,10 @@ pipeline{
     agent any
 
     environment {
-            PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
+            PATH = "C:\\Windows\\System32;C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
 
             // Define Docker Hub credentials ID
-            DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
+            DOCKERHUB_CREDENTIALS_ID = 'docker-hub-credentials'
             // Define Docker Hub repository name
             DOCKERHUB_REPO = 'vickneee/week6_livedemo2'
             // Define Docker image tag
@@ -14,7 +14,7 @@ pipeline{
         }
 
     tools {
-        maven 'Maven3'
+        maven 'Maven_3.9.11'
     }
 
     stages {
@@ -25,15 +25,21 @@ pipeline{
             }
         }
 
+        stage('Test CMD') {
+            steps {
+                bat 'echo Hello from CMD'
+            }
+        }
+
         stage ('Build') {
             steps {
-              bat  'mvn clean install'
+                bat  'mvn clean install'
             }
         }
 
         stage('Test') {
             steps {
-                bat 'mvn test'
+                bat 'mvn clean install'
             }
         }
 
@@ -55,18 +61,33 @@ pipeline{
             }
         }
 
+        stage('Test Docker') {
+            steps {
+                bat 'docker --version'
+            }
+        }
+
         stage('Build Docker Image') {
              steps {
                 bat 'docker build -t %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG% .'
              }
         }
 
+        // Create repo in Docker Hub to push it (Run Dockerfile)
         stage('Push Docker Image to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                // Using raw password (not recommended)
+                /* withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     bat '''
                         docker login -u %DOCKER_USER% -p %DOCKER_PASS%
                         docker push %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG%
+                    ''' */
+                // Using Docker Hub personal access token
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    bat '''
+                        docker login -u vickneee -p ****
+                        docker push %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG%
+                        echo %PASS% | docker login -u %USER% --password-stdin
                     '''
                 }
             }
