@@ -73,12 +73,6 @@ pipeline{
              }
         }
 
-        stage('Log in to the Docker') {
-            steps {
-                bat 'docker login -u vickneee -p ****'
-            }
-        }
-
         // Create repo in Docker Hub to push it (Run Dockerfile)
         stage('Push Docker Image to Docker Hub') {
             steps {
