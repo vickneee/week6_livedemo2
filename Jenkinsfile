@@ -85,9 +85,8 @@ pipeline{
                 // Using Docker Hub personal access token
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                     bat '''
-                        docker login -u vickneee -p ****
+                        echo $PASS | docker login -u %USER% --password-stdin
                         docker push %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG%
-                        echo %PASS% | docker login -u %USER% --password-stdin
                     '''
                 }
             }
